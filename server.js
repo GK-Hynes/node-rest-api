@@ -3,7 +3,8 @@ const {
   getProducts,
   getProduct,
   createProduct,
-  updateProduct
+  updateProduct,
+  deleteProduct
 } = require("./controllers/productController");
 
 const server = http.createServer((req, res) => {
@@ -12,7 +13,7 @@ const server = http.createServer((req, res) => {
     getProducts(req, res);
   }
   // READ Single Product
-  else if (req.url.match(/\/api\/products\/([0-9]+)/) && req.method === "GET") {
+  else if (req.url.match(/\/api\/products\/\w+/) && req.method === "GET") {
     //Pull id from url
     const id = req.url.split("/")[3];
     getProduct(req, res, id);
@@ -22,9 +23,14 @@ const server = http.createServer((req, res) => {
     createProduct(req, res);
   }
   // UPDATE Product
-  else if (req.url.match(/\/api\/products\/([0-9]+)/) && req.method === "PUT") {
+  else if (req.url.match(/\/api\/products\/\w+/) && req.method === "PUT") {
     const id = req.url.split("/")[3];
     updateProduct(req, res, id);
+  }
+  // Delete Product
+  else if (req.url.match(/\/api\/products\/\w+/) && req.method === "DELETE") {
+    const id = req.url.split("/")[3];
+    deleteProduct(req, res, id);
   } else {
     res.writeHead(404, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ message: "Route Not Found" }));
